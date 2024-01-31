@@ -407,6 +407,13 @@ uint8_t ModbusMaster::readInputRegisters(uint16_t u16ReadAddress,
   return ModbusMasterTransaction(ku8MBReadInputRegisters);
 }
 
+uint8_t ModbusMaster::readLastProfile(uint16_t u16ReadAddress,
+  uint8_t u16ReadQty)
+{
+  _u16ReadAddress = u16ReadAddress;
+  _u16ReadQty = u16ReadQty;
+  return ModbusMasterTransaction(ku8MBReadLastProfile);
+}
 
 /**
 Modbus function 0x05 Write Single Coil.
@@ -627,6 +634,14 @@ uint8_t ModbusMaster::ModbusMasterTransaction(uint8_t u8MBFunction)
   
   switch(u8MBFunction)
   {
+    case ku8MBReadLastProfile:
+      u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16ReadAddress);
+      u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16ReadQty);
+      break;
+  }
+
+  switch(u8MBFunction)
+  {
     case ku8MBWriteSingleCoil:
     case ku8MBMaskWriteRegister:
     case ku8MBWriteMultipleCoils:
@@ -780,6 +795,7 @@ uint8_t ModbusMaster::ModbusMasterTransaction(uint8_t u8MBFunction)
         case ku8MBReadCoils:
         case ku8MBReadDiscreteInputs:
         case ku8MBReadInputRegisters:
+        case ku8MBReadLastProfile:
         case ku8MBReadHoldingRegisters:
         case ku8MBReadWriteMultipleRegisters:
           u8BytesLeft = u8ModbusADU[2];
@@ -853,6 +869,7 @@ uint8_t ModbusMaster::ModbusMasterTransaction(uint8_t u8MBFunction)
         break;
         
       case ku8MBReadInputRegisters:
+      case ku8MBReadLastProfile:
       case ku8MBReadHoldingRegisters:
       case ku8MBReadWriteMultipleRegisters:
         // load bytes into word; response bytes are ordered H, L, H, L, ...
