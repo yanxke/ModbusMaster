@@ -885,18 +885,22 @@ uint8_t ModbusMaster::ModbusMasterTransaction(uint8_t u8MBFunction)
       
       case ku8MBReadLastProfile:
         // load bytes into word; response bytes are ordered H, L, H, L, ...
-        for (i = 0; i < (u8ModbusADU[2] >> 1) + 1; i++)
+        for (i = 0; i < (u8ModbusADU[2] >> 1); i++)
         {
           if (i < ku8MaxBufferSize)
           {
             //
-            if (i == 15)
+            if (i < 6)
             {
-            _u16ResponseBuffer[i] = word(0, u8ModbusADU[2 * i + 3]);
+              _u16ResponseBuffer[i] = word(u8ModbusADU[2 * i + 3], u8ModbusADU[2 * i + 4]);
+            }
+            else if (i == 6)
+            {
+              _u16ResponseBuffer[i] = word(0, u8ModbusADU[2 * i + 3]);
             }
             else
             {
-            _u16ResponseBuffer[i] = word(u8ModbusADU[2 * i + 3], u8ModbusADU[2 * i + 4]);
+              _u16ResponseBuffer[i] = word(u8ModbusADU[2 * i + 2], u8ModbusADU[2 * i + 3]);
             }
             //
           }
