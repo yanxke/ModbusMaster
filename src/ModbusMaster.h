@@ -206,8 +206,8 @@ class ModbusMaster
     uint8_t  readCoils(uint16_t, uint16_t);
     uint8_t  readDiscreteInputs(uint16_t, uint16_t);
     uint8_t  readHoldingRegisters(uint16_t, uint16_t);
-    uint8_t  readInputRegisters(uint16_t, uint16_t);
-    uint8_t  readLastProfile(uint16_t, uint16_t);
+    uint8_t  readInputRegisters(uint16_t, uint8_t);
+    uint8_t  readLastProfile(uint16_t, uint8_t);
     uint8_t  writeSingleCoil(uint16_t, uint8_t);
     uint8_t  writeSingleRegister(uint16_t, uint16_t);
     uint8_t  writeMultipleCoils(uint16_t, uint16_t);
