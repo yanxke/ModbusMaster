@@ -246,6 +246,7 @@ class ModbusMaster
     static const uint8_t ku8MBReadInputRegisters         = 0x04; ///< Modbus function 0x04 Read Input Registers
 
     static const uint8_t ku8MBReadLastProfile            = 0x44; 
+    static const uint8_t ku8MBReadProfileX               = 0x45; 
 
     static const uint8_t ku8MBWriteSingleRegister        = 0x06; ///< Modbus function 0x06 Write Single Register
     static const uint8_t ku8MBWriteMultipleRegisters     = 0x10; ///< Modbus function 0x10 Write Multiple Registers
