@@ -415,6 +415,14 @@ uint8_t ModbusMaster::readLastProfile(uint16_t u16ReadAddress,
   return ModbusMasterTransaction(ku8MBReadLastProfile);
 }
 
+uint8_t ModbusMaster::readProfileX(uint16_t u16ReadAddress,
+  uint8_t u16ReadQty)
+{
+  _u16ReadAddress = u16ReadAddress;
+  _u16ReadQty = u16ReadQty;
+  return ModbusMasterTransaction(ku8MBReadLastProfile);
+}
+
 /**
 Modbus function 0x05 Write Single Coil.
 
