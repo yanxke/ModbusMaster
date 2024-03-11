@@ -639,9 +639,9 @@ uint8_t ModbusMaster::ModbusMasterTransaction(uint8_t u8MBFunction)
       u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16ReadQty);
       break;
    case ku8MBReadProfileX:
-      u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16ReadAddress);
-      u8ModbusADU[u8ModbusADUSize++] = highByte(_u16ReadQty);
       u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16ReadQty);
+      u8ModbusADU[u8ModbusADUSize++] = highByte(_u16ReadAddress);
+      u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16ReadAddress);
       u8ModbusADU[u8ModbusADUSize++] = 0x01;
       break;
   }
