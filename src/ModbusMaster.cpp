@@ -420,7 +420,7 @@ uint8_t ModbusMaster::readProfileX(uint16_t u16ReadAddress,
 {
   _u16ReadAddress = u16ReadAddress;
   _u16ReadQty = u16ReadQty;
-  return ModbusMasterTransaction(ku8MBReadLastProfile);
+  return ModbusMasterTransaction(ku8MBReadProfileX);
 }
 
 /**
@@ -648,6 +648,8 @@ uint8_t ModbusMaster::ModbusMasterTransaction(uint8_t u8MBFunction)
       break;
    case ku8MBReadProfileX:
       u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16ReadQty);
+      u8ModbusADU[u8ModbusADUSize++] = 0x00;
+      u8ModbusADU[u8ModbusADUSize++] = 0x00;
       u8ModbusADU[u8ModbusADUSize++] = highByte(_u16ReadAddress);
       u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16ReadAddress);
       u8ModbusADU[u8ModbusADUSize++] = 0x01;
