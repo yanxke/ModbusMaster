@@ -195,7 +195,9 @@ class ModbusMaster
     void     clearResponseBuffer();
     uint8_t  setTransmitBuffer(uint8_t, uint16_t);
     void     clearTransmitBuffer();
-    
+
+    void     setTimeout(uint32_t);
+
     void beginTransmission(uint16_t);
     uint8_t requestFrom(uint16_t, uint16_t);
     void sendBit(bool);
