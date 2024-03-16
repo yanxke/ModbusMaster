@@ -67,15 +67,16 @@ Arduino class library for communicating with Modbus slaves over
 RS232/485 (via RTU protocol).
 */
 
-// Modbus timeout [milliseconds]
-uint16_t ku16MBResponseTimeout          = 750; ///< Modbus timeout [milliseconds]
-    
+
 
 class ModbusMaster
 {
   public:
     ModbusMaster();
-   
+
+    // Modbus timeout [milliseconds]
+    uint16_t ku16MBResponseTimeout          = 750; ///< Modbus timeout [milliseconds]
+
     void begin(uint8_t, Stream &serial);
     void idle(void (*)());
     void preTransmission(void (*)());
