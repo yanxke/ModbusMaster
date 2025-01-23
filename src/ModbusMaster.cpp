@@ -294,6 +294,11 @@ void ModbusMaster::clearTransmitBuffer()
   }
 }
 
+void ModbusMaster::setTimeout(uint32_t _timeout)
+{
+  ku16MBResponseTimeout = _timeout;
+}
+
 
 /**
 Modbus function 0x01 Read Coils.
@@ -407,6 +412,21 @@ uint8_t ModbusMaster::readInputRegisters(uint16_t u16ReadAddress,
   return ModbusMasterTransaction(ku8MBReadInputRegisters);
 }
 
+uint8_t ModbusMaster::readLastProfile(uint16_t u16ReadAddress,
+  uint8_t u16ReadQty)
+{
+  _u16ReadAddress = u16ReadAddress;
+  _u16ReadQty = u16ReadQty;
+  return ModbusMasterTransaction(ku8MBReadLastProfile);
+}
+
+uint8_t ModbusMaster::readProfileX(uint16_t u16ReadAddress,
+  uint8_t u16ReadQty)
+{
+  _u16ReadAddress = u16ReadAddress;
+  _u16ReadQty = u16ReadQty;
+  return ModbusMasterTransaction(ku8MBReadProfileX);
+}
 
 /**
 Modbus function 0x05 Write Single Coil.
@@ -627,6 +647,22 @@ uint8_t ModbusMaster::ModbusMasterTransaction(uint8_t u8MBFunction)
   
   switch(u8MBFunction)
   {
+    case ku8MBReadLastProfile:
+      u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16ReadAddress);
+      u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16ReadQty);
+      break;
+   case ku8MBReadProfileX:
+      u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16ReadQty);
+      u8ModbusADU[u8ModbusADUSize++] = 0x00;
+      u8ModbusADU[u8ModbusADUSize++] = 0x00;
+      u8ModbusADU[u8ModbusADUSize++] = highByte(_u16ReadAddress);
+      u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16ReadAddress);
+      u8ModbusADU[u8ModbusADUSize++] = 0x01;
+      break;
+  }
+
+  switch(u8MBFunction)
+  {
     case ku8MBWriteSingleCoil:
     case ku8MBMaskWriteRegister:
     case ku8MBWriteMultipleCoils:
@@ -780,6 +816,8 @@ uint8_t ModbusMaster::ModbusMasterTransaction(uint8_t u8MBFunction)
         case ku8MBReadCoils:
         case ku8MBReadDiscreteInputs:
         case ku8MBReadInputRegisters:
+        case ku8MBReadLastProfile:
+        case ku8MBReadProfileX:
         case ku8MBReadHoldingRegisters:
         case ku8MBReadWriteMultipleRegisters:
           u8BytesLeft = u8ModbusADU[2];
@@ -863,6 +901,32 @@ uint8_t ModbusMaster::ModbusMasterTransaction(uint8_t u8MBFunction)
             _u16ResponseBuffer[i] = word(u8ModbusADU[2 * i + 3], u8ModbusADU[2 * i + 4]);
           }
           
+          _u8ResponseBufferLength = i;
+        }
+        break;
+      
+      case ku8MBReadProfileX:
+      case ku8MBReadLastProfile:
+        // load bytes into word; response bytes are ordered H, L, H, L, ...
+        for (i = 0; i < (u8ModbusADU[2] >> 1) + 1; i++)
+        {
+          if (i < ku8MaxBufferSize)
+          {
+            //
+            if (i < 6)
+            {
+              _u16ResponseBuffer[i] = word(u8ModbusADU[2 * i + 3], u8ModbusADU[2 * i + 4]);
+            }
+            else if (i == 6)
+            {
+              _u16ResponseBuffer[i] = word(0, u8ModbusADU[2 * i + 3]);
+            }
+            else
+            {
+              _u16ResponseBuffer[i] = word(u8ModbusADU[2 * i + 2], u8ModbusADU[2 * i + 3]);
+            }
+            //
+          }
           _u8ResponseBufferLength = i;
         }
         break;

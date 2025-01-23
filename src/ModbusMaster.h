@@ -66,11 +66,14 @@ Set to 1 to enable debugging features within class:
 Arduino class library for communicating with Modbus slaves over 
 RS232/485 (via RTU protocol).
 */
+
+
+
 class ModbusMaster
 {
   public:
     ModbusMaster();
-   
+
     void begin(uint8_t, Stream &serial);
     void idle(void (*)());
     void preTransmission(void (*)());
@@ -192,7 +195,9 @@ class ModbusMaster
     void     clearResponseBuffer();
     uint8_t  setTransmitBuffer(uint8_t, uint16_t);
     void     clearTransmitBuffer();
-    
+
+    void     setTimeout(uint32_t);
+
     void beginTransmission(uint16_t);
     uint8_t requestFrom(uint16_t, uint16_t);
     void sendBit(bool);
@@ -207,6 +212,8 @@ class ModbusMaster
     uint8_t  readDiscreteInputs(uint16_t, uint16_t);
     uint8_t  readHoldingRegisters(uint16_t, uint16_t);
     uint8_t  readInputRegisters(uint16_t, uint8_t);
+    uint8_t  readLastProfile(uint16_t, uint8_t);
+    uint8_t  readProfileX(uint16_t, uint8_t);
     uint8_t  writeSingleCoil(uint16_t, uint8_t);
     uint8_t  writeSingleRegister(uint16_t, uint16_t);
     uint8_t  writeMultipleCoils(uint16_t, uint16_t);
@@ -243,13 +250,17 @@ class ModbusMaster
     // Modbus function codes for 16 bit access
     static const uint8_t ku8MBReadHoldingRegisters       = 0x03; ///< Modbus function 0x03 Read Holding Registers
     static const uint8_t ku8MBReadInputRegisters         = 0x04; ///< Modbus function 0x04 Read Input Registers
+
+    static const uint8_t ku8MBReadLastProfile            = 0x44; 
+    static const uint8_t ku8MBReadProfileX               = 0x45; 
+
     static const uint8_t ku8MBWriteSingleRegister        = 0x06; ///< Modbus function 0x06 Write Single Register
     static const uint8_t ku8MBWriteMultipleRegisters     = 0x10; ///< Modbus function 0x10 Write Multiple Registers
     static const uint8_t ku8MBMaskWriteRegister          = 0x16; ///< Modbus function 0x16 Mask Write Register
     static const uint8_t ku8MBReadWriteMultipleRegisters = 0x17; ///< Modbus function 0x17 Read Write Multiple Registers
     
     // Modbus timeout [milliseconds]
-    static const uint16_t ku16MBResponseTimeout          = 2000; ///< Modbus timeout [milliseconds]
+    uint16_t ku16MBResponseTimeout          = 750; ///< Modbus timeout [milliseconds]
     
     // master function that conducts Modbus transactions
     uint8_t ModbusMasterTransaction(uint8_t u8MBFunction);
